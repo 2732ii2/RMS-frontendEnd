@@ -9,7 +9,23 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
+    transition :ease-in-out;
     animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.rotatearound{
+  animation:rotator linear infinite 5s ;
+}
+@keyframes rotator{
+  0%{
+    transform:rotate(0deg) scale(1.1);
+  }
+  50%{
+    transform:rotate(180deg) scale(.7);
+  }
+  100%{
+    transform:rotate(360deg) scale(1.1);
   }
 }
 

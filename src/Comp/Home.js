@@ -4,12 +4,12 @@ const Home=()=>{
     const sel=useSelector(state=>(state));
     console.log(sel);
 
-    return <div className="w-[100%] h-[100vh] bg-[rgba(200,0,0,.2)] py-[50px] flex flex-col items-center ">
-        <h1 className="  mono text-[42px] font-bold tracking-wider  ">SA Solutions</h1>
-        <img src={logo} className="w-[250px] mt-4 h-[250px] rotatearound rounded-[50%] object-fit "/>
-        <h3 className="text-[28px] mt-[100px]">Smart Solutions for Modern Restaurants!</h3>
-        <p className="text-[20px] mt-2">Our Real-Time Management System Helps You Focus on What Matters Most—Your Customers.</p>
-        <div className="w-[5px] h-[100px] bg-[black] flex flex-col mt-5 justify-evenly ">
+    return <div className="w-[100%] h-[100vh]   z-[20]   flex flex-col items-center ">
+        <h1 className="  mono text-[42px] font-bold  tracking-wider underline  bg-[rgba(255,255,255,.3)] px-3  mt-[100px] greatvibes "> {"->  "} SAIDA Solutions</h1>
+        <img src={logo} className="w-[100%] h-[100%] absolute z-[-1] opacity-[.4]  box-shadow-lg rounded-[4px] object-fit "/>
+        <h3 className="text-[28px] mt-[15%] bg-[rgba(200,0,0,.5)] px-2 text-white">Smart Solutions for Modern Restaurants!</h3>
+        <p className="text-[20px] bg-[rgba(100,0,100,.5)] px-2 text-white mt-2">Our Real-Time Management System Helps You Focus on What Matters Most—Your Customers.</p>
+        <div className="w-[5px] h-[100px] bg-[black] flex flex-col mt-[5%] justify-evenly ">
             {[1,2,3,4,5].map((e,i)=>{
                 return <div className="w-[100%] h-[10%] bg-white"></div>
             })}

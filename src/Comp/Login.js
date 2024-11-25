@@ -1,5 +1,7 @@
 import BaseComp from "./BaseComp"
 import {useState} from "react";
+import toast, { Toaster } from 'react-hot-toast';
+import axios from "axios";
 const Login=()=>{
     return <BaseComp name="login" InnerComp={()=><MainComp/>}/>
 }
@@ -22,20 +24,61 @@ const MainComp=()=>{
         type:"range",
         val:""
     }])
+    const arr=[];
+    for(var i=0;i<20;i++){
+        arr.push(i+1);
+    }
     console.log(flip);
-    return <div className="w-[40%] overflow-hidden mt-[50px]  h-[50%] backdrop-blur-lg shadow-sm rounded-[20px] flex">
+    const [divThreeAns,setdta]=useState({
+        one:"",
+        two:20
+    });
+    console.log(divThreeAns);
+    return <>
+     <div className="w-[40%] overflow-hidden mt-[50px]  h-[50%] backdrop-blur-lg shadow-sm rounded-[20px] flex">
         <div style={{marginLeft:`${ flip?.two?"-100%":flip.third?"-200%":"" }  `}} className=" transition-all min-w-[100%] h-[100%] flex flex-col gap-[30px] items-center justify-center">
        {
         Object.keys(states).map((e,i)=>{
             return <div key={i} className="text-[22px] flex gap-[30px]">{e}
             
-             <input type={e.includes("Password")?"password":"text"} className=" rounded-[4px] bg-transparent border-b-[1px] border-black outline-none px-2 "/>
+             <input onChange={(el)=>{
+                setstates({
+                    ...states,[e]:el.target.value
+                })
+             }} type={e.includes("Password")?"password":"text"} className=" rounded-[4px] bg-transparent border-b-[1px] border-black outline-none px-2 "/>
             </div>
         })
        }
-       <button onClick={()=>setflip({
-        ...flip,two:true,one:false,third:false,
-       })} className="bg-[red] text-white text-[20px] rounded-[4px] py-2 px-3">Submit</button>
+       <button onClick={async()=>{
+        try{
+         const values=Object.values(states).filter(e=>{
+            if(e)return e;
+         });
+         console.log(values);
+         if(values.length==2)
+        {
+            const resp=await axios.post(`http://localhost:4100/login`,states);
+            console.log(resp?.data);
+            if(resp.data?.msg){
+              console.log(resp?.data?.usersession);
+              toast.success(resp.data?.msg)
+             }
+            else
+            toast.error(resp?.data?.err);
+        }
+        else{
+            toast.error(" Fill the credentials ");
+
+        }
+          }
+          catch(e){
+            toast.error(e?.message);
+           }
+        // setflip({
+        // ...flip,two:true,one:false,third:false,
+        // })
+       }} 
+       className="bg-[red] text-white text-[20px] rounded-[4px] py-2 px-3">Submit</button>
        </div>
        <div className="min-w-[100%] satisfy min-h-[100%] flex flex-col items-center justify-center gap-[50px] " >
         <h2 className="text-[30px]   !font-bold tracking-wide ">Welcome Ashad 😀 ,<br/>  to your Resturant Management System </h2>
@@ -44,9 +87,7 @@ const MainComp=()=>{
             <div className="flex gap-[40px] ">
                 <button className="bg-[white] active:skew-y-3 px-[10px] py-[1px]" onClick={()=>{ setflip({
                     ...flip,third:true,one:false,two:false
-                })}}>Yes</button>
-                <button className="bg-[white] px-[10px] py-[1px] active:skew-y-3">No</button>
-
+                })}}>Click me</button>
             </div>
         </div>
        </div>
@@ -54,15 +95,42 @@ const MainComp=()=>{
          {
             question?.map((e,i)=>{
                 
-                return <div key={i} className="flex flex-col gap-[30px] !text-[30px]">{"->"} {e?.question}
-                <input onChange={e=>{
-                    console.log(e.target.value);
-                }}  type={e?.type} max={20}/>
+                return <div key={i} className="flex relative flex-col gap-[30px] !text-[30px]">{"->"} {e?.question}
+                <input onChange={el=>{
+                    console.log(el.target.value);
+                    if(e?.type=="range"){
+                        setdta({
+                            ...divThreeAns,two:el.target.value
+                        })
+                    }
+                    else{
+                        setdta({
+                            ...divThreeAns,one:el.target.value
+                        })
+                    }
+                }}  type={e?.type} className=" border-b-[1px] text-center border-black bg-[transparent] " min={1} max={20}/>
+                  {i==1?<div className="flex absolute w-[100%] bottom-[-30px] justify-between items-center">{
+                   arr.map((e,i)=>{
+                    // console.log(i,divThreeAns);
+                    return <div key={i} className={  ` ${e==divThreeAns?.two?"text-[black]":""} text-[rgba(0,0,0,.2)] text-[16px]`} >{e}</div>
+                   })
+                   
+                   }</div>:null}
                  </div>
             })
          }
-         <button onClick={()=>{}} className="bg-[black] text-white text-[20px] rounded-[4px] py-2 px-3">Submit</button>
-       </div>
+         
+         <button onClick={()=>{}} className="bg-[black] text-white  text-[20px] rounded-[4px] py-2 px-3">Submit</button>
+       </div >
+       
     </div>
+    <div className="absolute ">
+
+    <Toaster
+       position="top-right"
+       reverseOrder={false}
+     />
+    </div>
+    </>
 }
 export default Login;

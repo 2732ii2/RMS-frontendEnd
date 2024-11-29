@@ -63,3 +63,27 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+.spec {
+ width:5%;
+}
+.spec:hover  {
+  width:15%;
+ }
+
+.spec h4{
+  display:none;
+}
+.spec div{
+  /* align-items:center; */
+  justify-content:center;
+}
+.spec:hover div{
+  /* align-items:start; */
+  justify-content:normal;
+}
+.spec:hover h4{
+  display:flex;
+}

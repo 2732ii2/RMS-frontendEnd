@@ -1,11 +1,17 @@
 import BaseComp from "./BaseComp"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import axios from "axios";
+import { userSess } from "../Redux/action";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const Login=()=>{
     return <BaseComp name="login" InnerComp={()=><MainComp/>}/>
 }
 const MainComp=()=>{
+    const dispatch=useDispatch();
+    const selector=useSelector(state=>state);
+    const navi=useNavigate();
     const [states,setstates]=useState({
         Username:"",
         Password:""
@@ -28,12 +34,22 @@ const MainComp=()=>{
     for(var i=0;i<20;i++){
         arr.push(i+1);
     }
-    console.log(flip);
+    // console.log(flip);
     const [divThreeAns,setdta]=useState({
         one:"",
         two:20
     });
-    console.log(divThreeAns);
+    // console.log(divThreeAns);
+    useEffect(()=>{
+     console.log(selector);
+     if(selector.usersess?.type?.includes("Admin"))
+      {
+          if(!(JSON.parse(localStorage.getItem("usersess")))?.type){
+          localStorage.setItem("usersess",JSON.stringify(selector.usersess));}
+          navi("/dashboard");
+
+      }
+    },[selector])
     return <>
      <div className="w-[40%] overflow-hidden mt-[50px]  h-[50%] backdrop-blur-lg shadow-sm rounded-[20px] flex">
         <div style={{marginLeft:`${ flip?.two?"-100%":flip.third?"-200%":"" }  `}} className=" transition-all min-w-[100%] h-[100%] flex flex-col gap-[30px] items-center justify-center">
@@ -61,7 +77,9 @@ const MainComp=()=>{
             console.log(resp?.data);
             if(resp.data?.msg){
               console.log(resp?.data?.usersession);
+              dispatch(userSess(resp?.data?.usersession));
               toast.success(resp.data?.msg)
+             
              }
             else
             toast.error(resp?.data?.err);

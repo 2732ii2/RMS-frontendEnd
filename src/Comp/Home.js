@@ -1,12 +1,11 @@
 import {useSelector} from "react-redux";
 import BaseComp from "./BaseComp";
+import { useEffect } from "react";
 const Home=()=>{
-    const sel=useSelector(state=>(state));
-    console.log(sel);
-
     return <BaseComp name="home" InnerComp={()=><MainComp/>}/>
 }
 const MainComp=()=>{
+    
     return <></>;
 }
 

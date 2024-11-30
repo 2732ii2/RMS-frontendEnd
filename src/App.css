@@ -87,3 +87,8 @@
 .spec:hover h4{
   display:flex;
 }
+.flexJCenter{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}

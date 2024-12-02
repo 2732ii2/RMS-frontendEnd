@@ -76,8 +76,8 @@ const MainComp=()=>{
             const resp=await axios.post(`http://localhost:4100/login`,states);
             console.log(resp?.data);
             if(resp.data?.msg){
-              console.log(resp?.data?.usersession);
-              dispatch(userSess(resp?.data?.usersession));
+              console.log(resp?.data);
+              dispatch(userSess({...resp?.data?.usersession,token:resp?.data?.token}));
               toast.success(resp.data?.msg)
              
              }

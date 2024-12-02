@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BaseComp from "./BaseComp"
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import orderlist from "../Images/clipboard.svg";
 import availableItems from "../Images/box.svg";
 import {useSelector} from "react-redux";
+import axios from "axios";
 const Dashboard=()=>{
     return <BaseComp name="dashboard" InnerComp={()=><MainComp/>}/>
 }
@@ -13,7 +14,8 @@ const MainComp=()=>{
     const [tab,setTab]=useState(0);
     const [show,setshow]=useState(false);
     const selector=useSelector(state=>state);
-    console.log(selector?.usersess?.type);
+    console.log(selector?.usersess);
+    const [userList,setuserList]=useState([]);
     const list_=[{
         name:"Dashboard",
         Icons:({color})=><DashboardIcon className={` ${color==="blue"?"!text-[#1c284d]":""} !text-[30px]`}/>,
@@ -53,7 +55,7 @@ const MainComp=()=>{
     })
     const [showDailog,setShowDailog]=useState(false);
     console.log(states);
-    const listThree=[
+    const listThree=userList ?.length?userList:  [
         {
             User:"User",
             Password:"Password",
@@ -113,6 +115,59 @@ const MainComp=()=>{
     }
 
     ]
+    const SubmitHandler=async()=>{
+        try{
+            console.log(states);
+            if(Object.values(states).filter((e)=>{if(e)return e;}).length !=2   ){
+                alert("fill the credentials");
+            }
+            else{
+               const resp=await axios.post(`http://localhost:4100/userCreation`,states);
+               console.log(resp);
+               setstates({
+                Username:"",
+                Password:""
+               })
+               
+            }
+        }
+        catch(e){
+            console.log(e);
+        }
+        setShowDailog(!showDailog);
+    }
+
+    async function getUserList(){
+        try{
+            const resp =  await axios.get("http://localhost:4100/userList",{
+                headers:{
+                    token:selector?.usersess?.token
+                }
+            });
+            console.log(resp?.data?.data);
+            // if(!userList.length)
+        var list=resp?.data?.data;
+        list.unshift({
+            SerialNo:"Serial No",
+            User:"User",
+            Password:"Password",
+            RoomId:"RoomId",
+            NoOfOrderPerDay:'NoOfOrderPerDay',
+            Action: "Action"
+        })
+        // console.log(list);
+        setuserList(list);
+    }
+        
+        catch(e){
+            console.log(e?.message);
+        }
+    }
+    useEffect(()=>{
+        console.log("udpating list")
+        if(selector?.usersess?.type)
+        getUserList();
+    },[showDailog])
     return <div className=" w-[95%] h-[90%] flex gap-[30px] items-center justify-center">
        <div  className={` spec cursor-pointer flex overflow-hidden flex-col   bg-[rgba(0,0,0,.4)] transition-all  h-[100%] backdrop-blur-2xl rounded-[20px] `}>
            {
@@ -137,33 +192,47 @@ const MainComp=()=>{
        <div className="w-[100%] h-[100%] backdrop-blur-lg flex flex-col items-center pt-4 ">
        { selector?.usersess?.type?.includes("Admin")? <div className="flex flex-col w-[100%] h-[100%] p-3 items-center">
          <div className="min-w-[100%] backdrop-blur-lg font-normal mono text-[18px] tracking-wide flex items-center justify-between px-4">
-         <div> User count : 201</div>
+         <div className="font-semibold mono"> User count : {userList?.length?userList.length-1: "-"}</div>
            <div onClick={()=>setShowDailog(!showDailog)} className="border-[1px] border-black rounded-[50%] p-1 cursor-pointer active:skew-y-3 active:skew-x-3 transition-all flexJCenter"><AddIcon/></div>
          </div>
          <div className="w-[100%] min-h-[auto] overflow-hidden border-[1px] border-white mt-[40px] bg-[rgba(0,0,0,.05)] flex flex-col  rounded-[20px]">
             {
-                listThree.map((e,i)=>{
+            !userList?.length? <div>loading ...</div>:   userList.map((e,i)=>{
                     if(i==0){
-                        return <div className=" bg-black w-[100%] flex min-h-[60px]">
+                        return <div key={i} className=" bg-black w-[100%] flex min-h-[60px]">
                             {
                                 Object.values(e).map((element,ind)=>{
-                                    return <div className="w-[20%] border-[1px] border-r-white flexJCenter text-white tracking-wide font-bold serial">{element}</div>
+                                    if(ind==0)
+                                        return  <div key={ind} className="w-[120px] whitespace-nowrap  border-[1px] border-r-white flexJCenter text-white tracking-wide font-bold serial">{element}</div>
+                                    else
+                                    return <div key={ind} className="w-[20%] border-[1px] border-r-white flexJCenter text-white tracking-wide font-bold serial">{element}</div>
                                 })
                             }
                         </div>
                     }
                     else
-                    return <div className=" bg-[rgba(0,0,0,.3)] w-[100%] flex min-h-[60px] ">
+                    return <div key={i} className="  bg-[rgba(0,0,0,.3)] w-[100%] flex min-h-[60px] ">
                     {
-                        Object.values(e).map((element,ind)=>{
-                            if(ind<4)
-                            return <div className="w-[20%] hover:bg-[rgba(255,255,255,.3)] cursor-pointer border-[1px] border-r-white flexJCenter">{element}</div>
-                            else
-                            return <div className="w-[20%] border-[1px] border-r-white flexJCenter">
-                               <button className=" border-[1px] border-[rgba(0,0,0,.2)] px-3 py-2 rounded-[4px] bg-[rgba(255,255,255,.2)] transition-all hover:bg-[black] hover:text-white active:skew-y-3">Delete</button>
-                            </div>
-                        })
+                        // Object.values(e).map((element,ind)=>{
+                        //     console.log(e);
+                        //     // if(ind<4)
+                        //     // return <div key={ind} className="w-[20%] hover:bg-[rgba(255,255,255,.3)] cursor-pointer border-[1px] border-r-white flexJCenter">{element}</div>
+                        //     // else
+                        //     // return <div key={ind} className="w-[20%] border-[1px] border-r-white flexJCenter">
+                        //     //    <button className=" border-[1px] border-[rgba(0,0,0,.2)] px-3 py-2 rounded-[4px] bg-[rgba(255,255,255,.2)] transition-all hover:bg-[black] hover:text-white active:skew-y-3">Delete</button>
+                        //     // </div>
+                        // })
                     }
+                    <div className="w-[120px] font-semibold hover:bg-[rgba(255,255,255,.3)] cursor-pointer border-[1px] border-r-white  capitalize flexJCenter">{i}</div>
+
+                    <div className="w-[20%] font-semibold hover:bg-[rgba(255,255,255,.3)] cursor-pointer border-[1px] border-r-white  capitalize flexJCenter">{e?.Username}</div>
+                    <div className="w-[20%] font-semibold hover:bg-[rgba(255,255,255,.3)] cursor-pointer border-[1px] border-r-white flexJCenter text-clip overflow-hidden   ">{e?.Password?.slice(0,10)+"..."}</div>
+                    <div className="w-[20%] font-semibold hover:bg-[rgba(255,255,255,.3)] cursor-pointer border-[1px] border-r-white flexJCenter">{e?.roomId}</div>
+                    <div className="w-[20%] font-semibold hover:bg-[rgba(255,255,255,.3)] cursor-pointer border-[1px] border-r-white flexJCenter">{e?.noOfOrder?e?.noOfOrder:"-"}</div>
+
+                    <div  className="w-[20%] border-[1px]  border-r-white flexJCenter">
+                         <button className=" border-[1px] font-semibold border-[rgba(0,0,0,.2)] px-3 py-2 rounded-[4px] bg-[rgba(255,255,255,.2)] transition-all hover:bg-[black] hover:text-white active:skew-y-3">Delete</button>
+                     </div>
                 </div>
                 })
             }
@@ -185,9 +254,7 @@ const MainComp=()=>{
                         </div>
                 })
                }
-               <button onClick={()=>{
-                console.log(states);
-               }} className=" bg-[skyblue] transition-all  text-black px-3 py-2 mt-[20px]">Submit</button>
+               <button onClick={SubmitHandler} className=" bg-[skyblue] transition-all  text-black px-3 py-2 mt-[20px]">Submit</button>
             </div>
 
             <div onClick={()=>setShowDailog(!showDailog)} className="border-[1px] backdrop-blur-3xl top-[30px] !rotate-45 right-[29px] absolute border-black rounded-[50%] p-1 cursor-pointer active:skew-y-3 active:skew-x-3 transition-all flexJCenter"><AddIcon/></div>

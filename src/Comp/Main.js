@@ -11,13 +11,15 @@ const Main=()=>{
     const navi=useNavigate();
     useEffect(()=>{
      console.log(selector);
-     if(selector.usersess?.type?.includes("Admin")){
+     if(selector.usersess?.type===("Admin")){
         navi("/dashboard");
      }
     },[selector])
     return <div>
          <Routes>
           <Route path="/" element={<Home/>}/>
+          <Route path="/:Rname/:name" element={<Home/>}/>
+
           <Route path="/login" element={ <Login/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
       </Routes>

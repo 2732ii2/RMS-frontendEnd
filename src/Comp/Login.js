@@ -2,27 +2,31 @@ import BaseComp from "./BaseComp"
 import {useEffect, useState} from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import axios from "axios";
-import { userSess } from "../Redux/action";
+import { UserPass, userSess } from "../Redux/action";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {Flip} from "../Redux/action";
 const Login=()=>{
     return <BaseComp name="login" InnerComp={()=><MainComp/>}/>
 }
 const MainComp=()=>{
     const dispatch=useDispatch();
     const selector=useSelector(state=>state);
+    const {flip}=selector;
     const navi=useNavigate();
+    
     const [states,setstates]=useState({
         Username:"",
         Password:""
     })
-    const [flip,setflip]=useState({
-        one:true,
-        two:false,
-        third:false,
-    })
+    // const [flip,setflip]=useState({
+    //     one:true,
+    //     two:false,
+    //     third:false,
+    // })
+    // console.log(flip);
     const [question,setques]=useState([{
-        question:"What is the name of Resturant",
+        question:"What is the name of Re0sturant",
         type:"text",
         val:""
     },{
@@ -46,7 +50,7 @@ const MainComp=()=>{
       {
           if(!(JSON.parse(localStorage.getItem("usersess")))?.type){
           localStorage.setItem("usersess",JSON.stringify(selector.usersess));}
-          navi("/dashboard");
+        //   navi("/dashboard");
 
       }
     },[selector])
@@ -79,7 +83,21 @@ const MainComp=()=>{
               console.log(resp?.data);
               dispatch(userSess({...resp?.data?.usersession,token:resp?.data?.token}));
               toast.success(resp.data?.msg)
-             
+              dispatch(UserPass(states));
+            
+              if(resp?.data?.usersession.type=="ResAdmin"){
+                // here is flipping tab happens
+                console.log("flipped",resp?.data?.usersession?.resturantName);
+                if(resp?.data?.usersession?.resturantName){
+                    console.log("going into it");
+                    navi("/dashboard");
+                }
+                else{
+                    dispatch(Flip({
+                        ...flip,two:true,one:false,third:false,
+                         }))
+                    }
+                }
              }
             else
             toast.error(resp?.data?.err);
@@ -92,9 +110,7 @@ const MainComp=()=>{
           catch(e){
             toast.error(e?.message);
            }
-        // setflip({
-        // ...flip,two:true,one:false,third:false,
-        // })
+        
        }} 
        className="bg-[red] text-white text-[20px] rounded-[4px] py-2 px-3">Submit</button>
        </div>
@@ -103,9 +119,14 @@ const MainComp=()=>{
         <div className="w-[auto] font-bold px-[50px] py-5 text-[22px] flex flex-col items-center justify-center gap-[20px] h-[auto] bg-[rgba(0,0,0,.2)]">
             Are you ready to play
             <div className="flex gap-[40px] ">
-                <button className="bg-[white] active:skew-y-3 px-[10px] py-[1px]" onClick={()=>{ setflip({
-                    ...flip,third:true,one:false,two:false
-                })}}>Click me</button>
+                <button className="bg-[white] active:skew-y-3 px-[10px] py-[1px]" onClick={()=>{ 
+                    // setflip({
+                    // ...flip,third:true,one:false,two:false
+                    // })
+                    dispatch(Flip({
+                        ...flip,third:true,one:false,two:false
+                         }))
+                }}>Click me</button>
             </div>
         </div>
        </div>
@@ -138,7 +159,96 @@ const MainComp=()=>{
             })
          }
          
-         <button onClick={()=>{}} className="bg-[black] text-white  text-[20px] rounded-[4px] py-2 px-3">Submit</button>
+         <button onClick={async()=>{
+            // resturantName
+            // selector?.usersess?.resturantName
+            console.log(question,divThreeAns,states);
+            const resp=await axios.post("http://localhost:4100/userUpdation",{usersess : selector?.usersess,...divThreeAns});
+            // const blob=(resp?.data?.data?.data);
+            console.log(resp?.data?.data);
+            const responseData = await resp?.data?.data;
+            console.log(responseData);
+
+
+    // Decode the base64 string to binary data
+    const binaryString = atob(responseData);
+
+    // Convert the binary string to a Uint8Array
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+
+    // Create a Blob from the Uint8Array
+    const blob = new Blob([byteArray], { type: "application/pdf" });
+
+    // Create an object URL for the Blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Trigger download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "qr_codes.pdf"; // Set the file name
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // Revoke object URL to release memory
+    window.URL.revokeObjectURL(url);
+
+
+
+            // console.log(blob);
+            // console.log(blob);
+            // /// creating a pdf of qr codes
+
+            // const url = window.URL.createObjectURL(blob);
+
+            // // Trigger download
+            // const a = document.createElement('a');
+            // a.href = url;
+            // a.download = 'qr_codes.pdf';
+            // document.body.appendChild(a);
+            // a.click();
+            // document.body.removeChild(a);
+
+
+    //         const blob = new Blob([resp?.data?.data?.data], { type: 'application/pdf' }); // Convert to Blob
+    // console.log(blob); // Check if Blob is correctly formed
+
+    // // Create an object URL for the Blob
+    // const url = window.URL.createObjectURL(blob);
+
+    // // Trigger download
+    // const a = document.createElement('a');
+    // a.href = url;
+    // a.download = 'qr_codes.pdf'; // Set the file name
+    // document.body.appendChild(a);
+    // a.click();
+    // document.body.removeChild(a);
+
+    // // Revoke object URL to release memory
+    // window.URL.revokeObjectURL(url);
+
+            ///
+
+
+
+
+            localStorage.removeItem("usersess");
+            const resp2=await axios.post(`http://localhost:4100/login`,selector?.user);
+            console.log(resp2?.data);
+            if(resp2.data?.msg){
+              console.log(resp2?.data);
+              dispatch(userSess({...resp2?.data?.usersession,token:resp2?.data?.token}));
+              dispatch(Flip({
+                ...flip,two:false,one:true,third:false,
+                 }))
+
+              navi("/dashboard");
+            }
+
+         }} className="bg-[black] text-white  text-[20px] rounded-[4px] py-2 px-3">Submit</button>
        </div >
        
     </div>

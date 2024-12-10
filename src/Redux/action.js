@@ -5,4 +5,16 @@ const userSess=(data)=>{
         payload:data
     }
 }
-export {userSess};
+const Flip=(data)=>{
+    return {
+        type:"flip",
+        payload:data
+    }
+}
+const UserPass=(data)=>{
+    return {
+        type:"user",
+        payload:data,
+    }
+}
+export {userSess,Flip,UserPass};

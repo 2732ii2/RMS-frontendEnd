@@ -7,11 +7,13 @@ import orderlist from "../Images/clipboard.svg";
 import availableItems from "../Images/box.svg";
 import {useSelector} from "react-redux";
 import axios from "axios";
+import img3 from "../Images/MalaiKoft.jpg";
 const Dashboard=()=>{
     return <BaseComp name="dashboard" InnerComp={()=><MainComp/>}/>
 }
 const MainComp=()=>{
-    const [tab,setTab]=useState(0);
+    const [tab,setTab]=useState(3);
+    console.log("tab => ",tab);
     const [show,setshow]=useState(false);
     const selector=useSelector(state=>state);
     console.log(selector?.usersess);
@@ -21,7 +23,7 @@ const MainComp=()=>{
         Icons:({color})=><DashboardIcon className={` ${color==="blue"?"!text-[#1c284d]":""} !text-[30px]`}/>,
     },
     {
-        name:"Order List",
+        name:"Order summary",
         Icons:orderlist,
     },
     {
@@ -146,7 +148,7 @@ const MainComp=()=>{
             });
             console.log(resp?.data?.data);
             // if(!userList.length)
-        var list=resp?.data?.data;
+        var list=resp?.data?.data.reverse();
         list.unshift({
             SerialNo:"Serial No",
             User:"User",
@@ -174,13 +176,13 @@ const MainComp=()=>{
             list_.map((e,i)=>{
                 const {Icons,name}=e;
                 if(i==0)
-                return <div onClick={()=>setTab(i)}  key={i} className={`flex ${i==tab?"text-white relative bg-[rgba(0,0,0,.3)]":""} p-4 w-[auto] gap-[8px] items-center `}> 
+                return <div onClick={()=>setTab(i+1)}  key={i} className={`flex ${i+1==tab?"text-white relative bg-[rgba(0,0,0,.3)]":""} p-4 w-[auto] gap-[8px] items-center `}> 
                    < Icons color={"blue"} />
                   <h4 className="whitespace-nowrap">{name}</h4>
                 
                   </div>
-                if(!selector?.usersess?.type?.includes("Admin")){
-                return <div  key={i} onClick={()=>setTab(i)}  className={`flex ${i==tab?"text-white bg-[rgba(0,0,0,.3)]":""} w-[auto] p-4 gap-[5px] items-center`}> 
+                if(selector?.usersess?.type!==("Admin")){
+                return <div  key={i} onClick={()=>setTab(i+1)}  className={`flex ${i+1==tab?"text-white bg-[rgba(0,0,0,.3)]":""} w-[auto] p-4 gap-[5px] items-center`}> 
                     <img src={Icons} className={`w-[35px] h-[35px]  `} alt=""/>
                     <h4 className={`whitespace-nowrap`}>{name}</h4>
                </div>
@@ -190,12 +192,12 @@ const MainComp=()=>{
         <div></div>
        </div>
        <div className="w-[100%] h-[100%] backdrop-blur-lg flex flex-col items-center pt-4 ">
-       { selector?.usersess?.type?.includes("Admin")? <div className="flex flex-col w-[100%] h-[100%] p-3 items-center">
+       { selector?.usersess?.type==("Admin")? <div className="flex flex-col w-[100%]  h-[100%] p-3 items-center">
          <div className="min-w-[100%] backdrop-blur-lg font-normal mono text-[18px] tracking-wide flex items-center justify-between px-4">
          <div className="font-semibold mono"> User count : {userList?.length?userList.length-1: "-"}</div>
            <div onClick={()=>setShowDailog(!showDailog)} className="border-[1px] border-black rounded-[50%] p-1 cursor-pointer active:skew-y-3 active:skew-x-3 transition-all flexJCenter"><AddIcon/></div>
          </div>
-         <div className="w-[100%] min-h-[auto] overflow-hidden border-[1px] border-white mt-[40px] bg-[rgba(0,0,0,.05)] flex flex-col  rounded-[20px]">
+         <div className="w-[100%] min-h-[auto] overflow-y-scroll border-[1px] border-white mt-[40px] bg-[rgba(0,0,0,.05)] flex flex-col  rounded-[20px]">
             {
             !userList?.length? <div>loading ...</div>:   userList.map((e,i)=>{
                     if(i==0){
@@ -261,7 +263,9 @@ const MainComp=()=>{
          </div>}
        </div> :
          <>
-          <div className="w-[95%] h-[15%] flex justify-between items-center" >
+        {
+            tab==1? <>
+              <div className="w-[95%] h-[15%] flex justify-between items-center" >
             {
                 listTwo.map((e,i)=>{
                     return <div className="w-[23%] h-[90%] flex flex-col items-center justify-center bg-[rgba(0,0,0,.8)] text-white rounded-[20px]" key={i}>
@@ -273,6 +277,39 @@ const MainComp=()=>{
         </div>
         <div>  </div>
          
+            </>
+            :tab==2? <div> order summary </div>:
+            <div className="gap-[20px]  min-w-[100%]  h-[100%] flex flex-col  items-center">
+                <div className=" w-[95%] items-center  h-[50px]  flex justify-between ">
+                    <div className=" serial  font-medium  text-[22px] " >Available Items </div>
+                    <div ><AddIcon/> </div>
+
+                      </div>
+                <div className="w-[95%] max-h-[90%] py-[40px] flex items-center flex-col scroller overflow-y-scroll gap-[20px]  bg-[rgba(0,0,0,.1)] rounded-[20px]">
+        {
+            [1,2,3,4,4,5,5].map((e,i)=>{
+                return <div className="w-[95%] px-[20px] flex items-center justify-between min-h-[200px] rounded-[20px] bg-white ">
+                    <div className="flex flex-col items-start ">
+                        <h1  className="text-[28px] my-2 font-semibold satisfy  " >Shahi Kabab with Shurua and Chapti's</h1>
+                        <p> ₹ 200</p>
+                        <div className=" mt-4 flex gap-[20px] ">{
+                        ["Q","H","F"].map((element,ind)=>{
+                            return <div key={ind} className={` rounded-[5px] p-2 px-4 text-white ${ind==0?"bg-[red] ":ind==1?"bg-[green]":"bg-[blue]"} `}>
+                               {element}
+                            </div>
+                        })
+                            }  </div>
+                    </div>
+                    <div className="w-[200px] relative h-[70%] shadow-lg ">
+                      <img src={img3} className="w-[100%] h-[100%] rounded-[10px] object-fit"/>
+                      {/* <button className="px-[50px] py-[5px] bg-[white] absolute right-[15%] shadow-2xl -bottom-[10px]">Add</button> */}
+                    </div>
+                </div>
+            })
+        }
+                </div>
+            </div>
+        }
          </>
 
        }

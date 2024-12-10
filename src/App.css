@@ -1,6 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Great+Vibes&family=Satisfy&display=swap');
 .App {
   text-align: center;
+  overflow:hidden;
+}
+.scroller {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: white transparent; /* For Firefox */
+  /* border-radius:20px; */
+}
+
+.scroller-spec {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: black  ; /* For Firefox */
+}
+.scroller::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+.scroller::-webkit-scrollbar-track {
+  background: black black; /* Transparent background */
+}
+
+.scroller::-webkit-scrollbar-thumb {
+  background-color: red; /* Red thumb */
+  border-radius: 10px; /* Optional: rounded corners */
+  border: 3px solid transparent; /* Optional: space around the thumb */
+  background-clip: content-box; /* Optional: to keep the border effect */
 }
 .satisfy{
   font-family: "Satisfy", serif;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BaseComp from "./BaseComp"
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -56,6 +56,7 @@ const MainComp=()=>{
         Password:""
     })
     const [showDailog,setShowDailog]=useState(false);
+    const [showAddDish,setShowAddDish]=useState(false);
     console.log(states);
     const listThree=userList ?.length?userList:  [
         {
@@ -279,35 +280,26 @@ const MainComp=()=>{
          
             </>
             :tab==2? <div> order summary </div>:
-            <div className="gap-[20px]  min-w-[100%]  h-[100%] flex flex-col  items-center">
+            <div className="gap-[20px] relative min-w-[100%]  h-[100%] flex flex-col  items-center">
+
                 <div className=" w-[95%] items-center  h-[50px]  flex justify-between ">
                     <div className=" serial  font-medium  text-[22px] " >Available Items </div>
-                    <div ><AddIcon/> </div>
+                    <div onClick={()=>{setShowAddDish(true)}} className=" hover:bg-[rgba(0,0,0,.3)]  p-[1px] w-[30px] h-[30px] cursor-pointer rounded-[50%] hover:text-black" ><AddIcon/> </div>
 
                       </div>
-                <div className="w-[95%] max-h-[90%] py-[40px] flex items-center flex-col scroller overflow-y-scroll gap-[20px]  bg-[rgba(0,0,0,.1)] rounded-[20px]">
+                <div className="w-[95%] px-[40px] max-h-[90%] py-[40px] flex items-center justify-start flex-wrap scroller overflow-y-scroll gap-[20px]  bg-[rgba(0,0,0,.1)] rounded-[20px]">
         {
             [1,2,3,4,4,5,5].map((e,i)=>{
-                return <div className="w-[95%] px-[20px] flex items-center justify-between min-h-[200px] rounded-[20px] bg-white ">
-                    <div className="flex flex-col items-start ">
-                        <h1  className="text-[28px] my-2 font-semibold satisfy  " >Shahi Kabab with Shurua and Chapti's</h1>
-                        <p> ₹ 200</p>
-                        <div className=" mt-4 flex gap-[20px] ">{
-                        ["Q","H","F"].map((element,ind)=>{
-                            return <div key={ind} className={` rounded-[5px] p-2 px-4 text-white ${ind==0?"bg-[red] ":ind==1?"bg-[green]":"bg-[blue]"} `}>
-                               {element}
-                            </div>
-                        })
-                            }  </div>
-                    </div>
-                    <div className="w-[200px] relative h-[70%] shadow-lg ">
-                      <img src={img3} className="w-[100%] h-[100%] rounded-[10px] object-fit"/>
-                      {/* <button className="px-[50px] py-[5px] bg-[white] absolute right-[15%] shadow-2xl -bottom-[10px]">Add</button> */}
-                    </div>
-                </div>
+                return <Card key={i}/>
             })
         }
                 </div>
+
+
+               {/* Here Dailog box start */}
+                 
+            {showAddDish ?   <DailogBox onClick={()=>{setShowAddDish(false)}} usersess={selector?.usersess} /> : null}
+
             </div>
         }
          </>
@@ -318,6 +310,245 @@ const MainComp=()=>{
     </div>
 }
 export default Dashboard;
+
+
+const Card=()=>{
+    return <div className="w-[44%] flex items-center justify-between rounded-[20px] bg-[white] px-[20px] py-[20px] min-h-[200px]">
+
+     <div  className="w-[45%] h-[auto] flex flex-col items-start pl-1" >
+       <h1 className="font-semibold text-black text-[20px]">Chicker Shahi Korma</h1>
+       <p className="text-start mt-[2px]">A rich in creamy curry made with tendor chicker peices in a sauce of yogurt ,cream and aroumatic spices.</p>
+       <div className=" mt-4 flex gap-[20px] ">{
+                        ["Q","H","F"].map((element,ind)=>{
+                            return <div key={ind} className={` rounded-[5px] p-2 px-4 text-black bg-[rgba(0,0,0,.1)] `}>
+                               {element}
+                            </div>
+                        })
+                            }  </div>
+     </div>
+     <div className="w-[40%] h-[95%]  border-[1px] border-black relative rounded-[20px]">
+      <img src={img3} className="w-[100%] h-[100%] rounded-[10px] object-fit"/>
+      <p className="bg-white px-4  font-semibold py-1 text-black top-[10px] right-[10px] rounded-[20px] absolute z-1 "> ₹ 200</p>
+     </div>
+          
+    </div>
+}
+
+
+
+const DailogBox=({onClick,usersess})=>{
+    const [list,setlist]=useState({
+        Q:false,
+        H:false,
+        L:false
+    })
+    console.log(list);
+    const [states,setStates]=useState({
+        name:"",
+        des:"",
+        sizes:{...list},
+        prices:{first:"",second:"",third:""},
+        file:{
+            type:"",
+            val:"",
+        }
+    })
+    console.log("states => ",states);
+    useEffect(()=>{
+     setStates({
+        ...states,sizes:{...list}
+     })
+    //  if(states?.sizes?.H){
+    //     console.log("hitted");
+    //     setStates(prevState => ({
+    //         ...prevState, 
+    //         prices: { ...prevState.prices, second: "" }
+    //     }));   
+    // }
+    //  if(states?.sizes?.Q){
+    //     console.log("hitted");
+    //     setStates(prevState => ({
+    //         ...prevState, 
+    //         prices: { ...prevState.prices, first: "" }
+    //     }));   
+    // }
+    //  if(states?.sizes?.F){
+    //     console.log("hitted");
+    //     setStates(prevState => ({
+    //         ...prevState, 
+    //         prices: { ...prevState.prices, third: "" }
+    //     }));   
+    // }
+    },[list])
+    return  <div className="w-[auto]  px-[25px] border-[1px] border-[rgba(0,0,0,.1)] gap-[20px] bg-white absolute h-[auto] py-[40px] top-[15%] shadow-2xl flex flex-col items-center justify-center">
+
+    <h5 className="arial text-[22px] -ml-[15px] py-2 font-semibold arial rounded-[20px] bg-[rgba(0,0,0,.2)] text-black px-[10px] "> Add a Dish</h5> 
+    <div className="flex items-center w-[100%] text-[20px] gap-[50px] !font-medium arial  "> Name  <input onChange={elm=>{
+        setStates({
+            ...states,name:elm.target.value
+        })
+    }} className="w-[90%] border-b-[1px] border-black " /> </div>   
+    <div className="flex items-center w-[100%] text-[20px] gap-[50px] !font-medium arial  "> Description  <textarea onChange={elm=>{
+        setStates({
+            ...states,des:elm.target.value
+        })
+    }}  className="w-[90%] border-b-[1px] border-black " /> </div>   
+    <div className="flex items-start w-[100%] gap-[50px] text-[20px] !font-medium arial mt-[20px] "> Sizes  
+        <div className="flex gap-[25px] h-[30px] items-center">
+          {
+            Object.keys(list).map((e,i)=>{
+                return <div className="flex text-[14px] flex-col-reverse">{e} <input onChange={el=>{
+                    setlist({
+                        ...list,[e]:!list[e]
+                    })
+                    
+                }} type="checkbox"  className="w-[30px] pl-1 h-[20px]"/></div>
+            })
+          }
+        </div>
+    </div>   
+    <div className="flex items-start w-[100%] gap-[50px] text-[20px] mt-2 !font-medium arial "> Prices  
+        <div className="flex gap-[25px] h-[30px] items-center">
+          {
+            Object.keys(list).map((e,i)=>{
+                console.log("=>",list[e]);
+                return <div className="flex  flex-col-reverse"> <input value={i==0?states.prices.first:i==1?(states.sizes.H?  states.prices.second :""):states.prices.third}  onChange={elm=>{
+                if(i==0)
+                setStates(prevState => ({
+                    ...prevState, 
+                    prices: { ...prevState.prices, first: elm.target.value }
+                }));
+                
+                else if (i==1)
+                    setStates(prevState => ({
+                        ...prevState, 
+                        prices: { ...prevState.prices, second: elm.target.value }
+                    }));   
+               
+                else
+                setStates(prevState => ({
+                    ...prevState, 
+                    prices: { ...prevState.prices, third: elm.target.value }
+                }));
+                }} disabled={!list[e]} type="number"  className="w-[100px] border-[1px] border-black"/></div>
+            })
+          }
+        </div>
+    </div>
+
+   <div className="flex items-start w-[100%] justify-between text-[20px] mt-2 !font-medium arial ">
+     File <div className="flex w-[75%] p-4 justify-between items-center">
+   <CustomFileInput onFileSelect={ (files) => {
+    console.log('Selected file:', (files))
+    setStates((prevstate)=>
+        ({
+            ...prevstate,file:{
+                ...prevstate.file,type:"file",val:files
+            }
+        })
+    )
+  }} /> <div>or </div><input className="w-[40%] h-[70%] border-b-[1px] border-black"/>
+   </div>
+      
+   </div>
+
+    <button
+      className="px-4 py-2 mt-[20px] text-sm font-medium text-white bg-blue-500 rounded-md shadow-sm
+                 transition-all duration-300 ease-in-out
+                 hover:bg-blue-600 hover:shadow-md
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+                 active:bg-blue-700 active:shadow-inner"
+      onClick={async()=>{
+        // const resp =await axios.post("http://localhost:4100/add_recipe",({usersess,states}));
+        // console.log(resp);
+        const formData = new FormData();
+        console.log("=>",usersess);
+formData.append("usersess", JSON.stringify(usersess)); // Add other fields if needed
+formData.append("files", states.file.val); // Attach the file
+formData.append("type", states.file.type); // Attach other fields from your `states`
+formData.append("Prices",JSON.stringify(states.prices));
+formData.append("Sizes",JSON.stringify(states.sizes));
+formData.append("name",JSON.stringify(states.name));
+
+formData.append("des",JSON.stringify(states.des));
+
+const resp = await axios.post("http://localhost:4100/add_recipe", formData, {
+    headers: {
+        "Content-Type": "multipart/form-data", // Ensure correct headers
+    },
+});
+console.log(resp);
+        onClick();
+      }}
+    >
+      Submit
+    </button>
+
+    <button
+      className={`
+        w-8 h-8 flex items-center justify-center
+        text-gray-500 bg-white rounded-full
+        border border-gray-300
+        transition-all duration-200 ease-in-out
+        hover:bg-gray-100 hover:text-gray-700
+        focus:outline-none focus:ring-2 focus:ring-gray-300
+        active:bg-gray-200 active:text-gray-800
+         absolute top-[10px] right-[20px]
+      `}
+      onClick={onClick}
+      aria-label="Close"
+    >
+      <span className="text-lg font-medium leading-none">×</span>
+    </button>
+  </div> 
+}
+
+
+
+
+
+// interface CustomFileInputProps {
+//   onFileSelect: (file: File) => void
+// }
+
+const CustomFileInput = ({ onFileSelect }) => {
+  const fileInputRef = useRef(null)
+  const [fileName, setFileName] = useState(null)
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      setFileName(file.name)
+      onFileSelect(file)
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-center">
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+        aria-label="File input"
+      />
+      <button
+        onClick={handleButtonClick}
+        className="w-[40px] h-[40px] text-[20px] rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+        aria-label="Add file"
+      >
+        +
+      </button>
+      {fileName && (
+        <p className="mt-2 text-sm text-gray-600">Selected: {fileName}</p>
+      )}
+    </div>
+  )
+}
 
 
 

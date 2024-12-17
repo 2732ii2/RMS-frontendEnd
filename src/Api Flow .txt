@@ -2,3 +2,27 @@
 - Api's  are there
 - Login Page
 - User creation in Dashboard page in Submit Handler
+- Add recipe api at Dashboard
+
+
+
+
+- : Learning in this project : let say you want to send the file
+# as event.target.files[0]
+- firstly you can't send that directly you will see empty object in payload
+: formData.append you have to use
+
+
+: - then how you going to retrieve it in backend
+: mutler you have use
+ 
+then controller is going to be 
+app.post("/whatever",upload.any(),(req,res)=>
+{
+    /// then you have do this \
+    console.log(req.body)    for the text or list attributes
+    console.log(req.files)   for the file that you are sending 
+})
+
+
+: that is going ot be the learning

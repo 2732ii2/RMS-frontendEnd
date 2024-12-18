@@ -16,7 +16,8 @@ return <div className="w-[100%] h-[100vh]   z-[20] relative   flex flex-col item
             dispatch(userSess({}));
         }} className="  font-semibold   px-3 py-2 rounded-[4px] bg-[rgba(0,0,0,.9)] transition-all text-white active:skew-y-3">Log OUT</button>
     </div>:null }
-    <img src={logo} className="w-[100%] h-[100%] absolute z-[-1] opacity-[.4]  box-shadow-lg rounded-[4px] object-fit "/>
+    {/* <img src={logo} className="w-[100%] h-[100%] absolute z-[-1] opacity-[.4]  box-shadow-lg rounded-[4px] object-fit "/> */}
+    <div className=" w-[100%] h-[100%] absolute z-[-1] opacity-[.4]  box-shadow-lg rounded-[4px]  object-fit  bg-gradient-radial from-purple-500 via-purple-300 to-white blur-lg rounded-lg "></div>
     {
         name.includes("home")?
         <>

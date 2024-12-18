@@ -166,6 +166,26 @@ const MainComp=()=>{
             console.log(e?.message);
         }
     }
+    const [dishes,setdishes]=useState([]);
+    async function getAllDishes(){
+        try{
+            const resp=await axios.get("http://localhost:4100/available_dishes",{
+                headers:{
+                    usersess:JSON.stringify(selector?.usersess)
+                }
+            })
+            console.log(" dished",resp?.data?.data1);
+            setdishes(resp?.data?.data1);
+        }
+        catch(e){
+            console.log(e?.message);
+        }
+    }
+    useEffect(()=>{
+        // available_dishes
+        getAllDishes();
+    },[selector])
+
     useEffect(()=>{
         console.log("udpating list")
         if(selector?.usersess?.type)
@@ -289,9 +309,9 @@ const MainComp=()=>{
                       </div>
                 <div className="w-[95%] px-[40px] max-h-[90%] py-[40px] flex items-center justify-start flex-wrap scroller overflow-y-scroll gap-[20px]  bg-[rgba(0,0,0,.1)] rounded-[20px]">
         {
-            [1,2,3,4,4,5,5].map((e,i)=>{
-                return <Card key={i}/>
-            })
+           dishes?.length? dishes.map((e,i)=>{
+                return <Card key={i} data={e}/>
+            }):null
         }
                 </div>
 
@@ -312,23 +332,31 @@ const MainComp=()=>{
 export default Dashboard;
 
 
-const Card=()=>{
+const Card=({data})=>{
+    console.log("carddata",(data));
+    const [index,setindex]=useState(0);
     return <div className="w-[44%] flex items-center justify-between rounded-[20px] bg-[white] px-[20px] py-[20px] min-h-[200px]">
 
      <div  className="w-[45%] h-[auto] flex flex-col items-start pl-1" >
-       <h1 className="font-semibold text-black text-[20px]">Chicker Shahi Korma</h1>
-       <p className="text-start mt-[2px]">A rich in creamy curry made with tendor chicker peices in a sauce of yogurt ,cream and aroumatic spices.</p>
+       <h1 className="font-semibold text-black text-[20px]">{data?.name}</h1>
+       <p className="text-start mt-[2px] line-clamp-5">{data?.des}</p>
        <div className=" mt-4 flex gap-[20px] ">{
-                        ["Q","H","F"].map((element,ind)=>{
-                            return <div key={ind} className={` rounded-[5px] p-2 px-4 text-black bg-[rgba(0,0,0,.1)] `}>
+                        Object.keys(data?.Sizes).map((element,ind)=>{
+                            if(data.Sizes[element])
+                            return <div onClick={()=>setindex(ind)} key={ind} className={` cursor-pointer hover:shadow-lg  rounded-[5px] p-2 px-4 text-white bg-[rgba(0,0,0)] `}>
                                {element}
-                            </div>
+                              </div>
+                            else
+                            if(!data.Sizes[element])
+                                return <div key={ind} onClick={()=>setindex(ind)} className={` cursor-pointer hover:shadow-lg  rounded-[5px] p-2 px-4 text-black bg-[rgba(0,0,0,.1)] `}>
+                               {element}
+                             </div> 
                         })
                             }  </div>
      </div>
-     <div className="w-[40%] h-[95%]  border-[1px] border-black relative rounded-[20px]">
-      <img src={img3} className="w-[100%] h-[100%] rounded-[10px] object-fit"/>
-      <p className="bg-white px-4  font-semibold py-1 text-black top-[10px] right-[10px] rounded-[20px] absolute z-1 "> ₹ 200</p>
+     <div className="w-[40%] h-[95%] max-h-[95%]  border-[1px] border-black relative rounded-[20px]">
+      <img src={`${data?.imgurl}`} className="w-[100%] h-[180px] rounded-[10px] object-fit"/>
+      <p className="bg-white px-4  font-semibold py-1 text-black top-[10px] right-[10px] rounded-[20px] absolute z-1 "> ₹ { index==0 ? ( data?.Prices?.first?data?.Prices?.first:"-" ) :index ==1?(data?.Prices?.second?data?.Prices?.second:"-"):(data?.Prices?.third?data?.Prices?.third:"-") }</p>
      </div>
           
     </div>
@@ -468,9 +496,9 @@ formData.append("files", states.file.val); // Attach the file
 formData.append("type", states.file.type); // Attach other fields from your `states`
 formData.append("Prices",JSON.stringify(states.prices));
 formData.append("Sizes",JSON.stringify(states.sizes));
-formData.append("name",JSON.stringify(states.name));
+formData.append("name",(states.name));
 
-formData.append("des",JSON.stringify(states.des));
+formData.append("des",(states.des));
 
 const resp = await axios.post("http://localhost:4100/add_recipe", formData, {
     headers: {

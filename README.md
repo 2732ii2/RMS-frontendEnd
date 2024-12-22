@@ -2,6 +2,36 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Screenshot
+<h3> Admin Dashboard </h3>
+
+<img width="1424" alt="Screenshot 2024-12-22 at 8 55 40 PM" src="https://github.com/user-attachments/assets/83138aae-90ca-4aa8-9125-c6966cda26b9" />
+
+<h3> User Dashboard </h3>
+
+<img width="1421" alt="Screenshot 2024-12-22 at 8 55 11 PM" src="https://github.com/user-attachments/assets/51eb13ee-7506-45a5-a10d-f1db4d46099b" />
+
+<h3> Landing page </h3>
+
+<img width="1421" alt="Screenshot 2024-12-22 at 8 53 55 PM" src="https://github.com/user-attachments/assets/f415c93a-4e61-434a-a8c2-dc4ec42a37f6" />
+
+
+<h3>First time Resutrant Admin log's in </h3>
+
+
+<h2> Step 1 </h2>
+<img width="1424" alt="Screenshot 2024-12-22 at 8 58 33 PM" src="https://github.com/user-attachments/assets/7bfddbca-a616-40ea-a12f-e8807d0bb48d" />
+
+<h2> Step 2 </h2>
+<img width="1424" alt="Screenshot 2024-12-22 at 9 03 03 PM" src="https://github.com/user-attachments/assets/abd14d34-0981-43d1-b6d0-ac6ea187ad3a" />
+
+
+<h3> Step 3 : After submit your QR Code will get downloaded </h3>
+<img width="1424" alt="Screenshot 2024-12-22 at 8 58 54 PM" src="https://github.com/user-attachments/assets/1465d057-3f40-4456-b1bb-fcac6a9d993f" />
+
+
+
+
 ## Available Scripts
 
 In the project directory, you can run:

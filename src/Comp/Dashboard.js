@@ -181,10 +181,11 @@ const MainComp=()=>{
             console.log(e?.message);
         }
     }
+    const [listUpdates,setListupdated]=useState(false);
     useEffect(()=>{
         // available_dishes
         getAllDishes();
-    },[selector])
+    },[selector,listUpdates])
 
     useEffect(()=>{
         console.log("udpating list")
@@ -318,7 +319,10 @@ const MainComp=()=>{
 
                {/* Here Dailog box start */}
                  
-            {showAddDish ?   <DailogBox onClick={()=>{setShowAddDish(false)}} usersess={selector?.usersess} /> : null}
+            {showAddDish ?   <DailogBox onClick={()=>{
+                setShowAddDish(false)
+            setListupdated(!listUpdates);
+            }} usersess={selector?.usersess} /> : null}
 
             </div>
         }
@@ -329,13 +333,15 @@ const MainComp=()=>{
          
     </div>
 }
-export default Dashboard;
 
 
-const Card=({data})=>{
+const Card=(props)=>{
+    const {data}=props;
+    var height=(props?.height);
+    console.log(height);
     console.log("carddata",(data));
     const [index,setindex]=useState(0);
-    return <div className="w-[44%] flex items-center justify-between rounded-[20px] bg-[white] px-[20px] py-[20px] min-h-[200px]">
+    return <div className={`w-[44%] flex items-center justify-between rounded-[20px] bg-[white] px-[20px] py-[20px] ${height?`h-[230px] `:"min-h-[200px]"}`}>
 
      <div  className="w-[45%] h-[auto] flex flex-col items-start pl-1" >
        <h1 className="font-semibold text-black text-[20px]">{data?.name}</h1>
@@ -363,6 +369,7 @@ const Card=({data})=>{
 }
 
 
+export  {Dashboard,Card};
 
 const DailogBox=({onClick,usersess})=>{
     const [list,setlist]=useState({
@@ -422,10 +429,11 @@ const DailogBox=({onClick,usersess})=>{
         })
     }}  className="w-[90%] border-b-[1px] border-black " /> </div>   
     <div className="flex items-start w-[100%] gap-[50px] text-[20px] !font-medium arial mt-[20px] "> Sizes  
-        <div className="flex gap-[25px] h-[30px] items-center">
+        <div className="flex gap-[25px] w-[100%] h-[30px] items-center justify-start pl-5">
           {
             Object.keys(list).map((e,i)=>{
                 return <div className="flex text-[14px] flex-col-reverse">{e} <input onChange={el=>{
+                    // alert("clicked");
                     setlist({
                         ...list,[e]:!list[e]
                     })

@@ -3,8 +3,9 @@ import Home from "./Home";
 import Login from "./Login";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import Dashboard from "./Dashboard";
+import {Dashboard} from "./Dashboard";
 import MainHome from "../components/MainHome.tsx"
+import MenuComp from "./MenuPage.js";
 const Main=()=>{
     const selector=useSelector(state=>state);
     console.log(selector?.usersess?.type);
@@ -18,7 +19,7 @@ const Main=()=>{
     return <div>
          <Routes>
           <Route path="/" element={<MainHome/>}/>
-          <Route path="/:Rname/:name" element={<Home/>}/>
+          <Route path="/:Rname/:name" element={<MenuComp/>}/>
 
           <Route path="/login" element={ <Login/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>

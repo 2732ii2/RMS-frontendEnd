@@ -55,7 +55,7 @@ const MainComp=()=>{
       }
     },[selector])
     return <>
-     <div className="w-[40%] overflow-hidden mt-[50px]  h-[50%] backdrop-blur-lg shadow-sm rounded-[20px] flex">
+     <div className="w-[40%] overflow-hidden mt-[50px] bg-[rgba(255,255,255,.7)]  h-[50%] backdrop-blur-lg shadow-sm rounded-[20px] flex">
         <div style={{marginLeft:`${ flip?.two?"-100%":flip.third?"-200%":"" }  `}} className=" transition-all min-w-[100%] h-[100%] flex flex-col gap-[30px] items-center justify-center">
        {
         Object.keys(states).map((e,i)=>{

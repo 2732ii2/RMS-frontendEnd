@@ -6,6 +6,9 @@
 <li>: like Name of resturant and no of Tables now when you submit it will generate the pdf file of QR code scanner for all the tables. </li>
 <li>: Which is linked to your menu that you have created after when you clicked to the submit button </li>
 
+
+<p   > Backend Repo : https://github.com/2732ii2/RMS-backend </p>
+
 # ScreenShots
 
 <img width="1428" alt="Screenshot 2025-03-01 at 5 17 34 PM" src="https://github.com/user-attachments/assets/40d8b1b7-2a02-46d8-a3c5-4f8cac2c4e78" />
